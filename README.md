@@ -9,5 +9,5 @@ The Cashier registers the name of the customer and the price for the seat. The p
 seat number counted from the seat at the most rear part of the auditorium, i.e. the last chair.</p>
 
 <p align="center">
-  <img src="images/Capture.PNG">
+  <img src="images/Capture1.PNG">
 </p> 
