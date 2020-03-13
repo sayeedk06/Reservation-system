@@ -1,4 +1,5 @@
 
+
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -7,11 +8,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-
-public class Form  {
-	// declare the SWING components
-private JFrame frame;
+public class Mainform {
 	
+
+
+	private JFrame frame;
+
+	private double total = 0;
 	private String text;
 	private String number;
 	private static int num = 240;
@@ -25,30 +28,36 @@ private JFrame frame;
 	private JLabel resLabel;
 	private JLabel totalRevenue;
 	private JLabel textRevenue;
-	
-	
+	private JLabel vacant;
+	private JLabel vacNum;
+
+
+
 	private JPanel panelL;
 	private JPanel panelB;
 	private JPanel panelR;
 
-	
-	private JButton reserve;
+
+	private JButton res_Can;
 	private ButtonGroup radioGroup;
-	
+
 	private JRadioButton Res;
 	private JRadioButton Canc;
-	
+
 	private JTextField nameText;
 	private JTextField priceText;
 
-	
+
 	private JTextArea list;
 	private JScrollPane  scroll;
+		
+		
 
-	GridBagConstraints gbc = new GridBagConstraints();
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		InputUtility conStr= new InputUtility();
 	
-	
-	public Form()
+	public Mainform()
 	{
 		// Frame object
 		frame = new JFrame();
@@ -74,7 +83,7 @@ private JFrame frame;
 		frame.setLayout(g);
 		
 		//JButton
-	    reserve= new JButton("Reserve");
+	    res_Can= new JButton("Reserve/Cancel");
 		
 		//JRadioButton
 		Res = new JRadioButton("Reserve",true);
@@ -87,14 +96,15 @@ private JFrame frame;
 		
 		//JLabel objects
 		NumOfSeats = new JLabel("Number of seats:");
-		Reserved = new JLabel("Number of reserved seats: ");
+		Reserved = new JLabel("No. of Reserved seats:  ");
 		name = new JLabel("Name");
 		price = new JLabel("Price");
 		numberLabel=new JLabel("240");
 		resLabel = new JLabel("0");
-		textRevenue = new JLabel("Total Revenue");
+		textRevenue = new JLabel("Total Revenue:  ");
 		totalRevenue = new JLabel("0");
-		
+		vacant = new JLabel("Vacant seats:  ");
+		vacNum = new JLabel("240");
 		
 		
 		//JTextfield objects
@@ -135,48 +145,84 @@ private JFrame frame;
 		panelL.add(priceText,gbc);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
-		panelL.add(reserve,gbc);
+		panelL.add(res_Can,gbc);
 
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 0;
 		
 		panelB.add(NumOfSeats,gbc);
 		
 		gbc.gridx = 1;
-		gbc.gridy = 4;
+		gbc.gridy = 0;
 		panelB.add(numberLabel,gbc);
 		gbc.gridx = 0;
-		gbc.gridy = 5;
+		gbc.gridy = 2;
 		panelB.add(Reserved,gbc);
 		
 		gbc.gridx = 1;
-		gbc.gridy = 5;
+		gbc.gridy = 2;
 		panelB.add(resLabel, gbc);
 		
 		gbc.gridx = 0;
-		gbc.gridy = 3;
-	panelB.add(textRevenue, gbc);
+		gbc.gridy = 4;
+		panelB.add(textRevenue, gbc);
 	
-	gbc.gridx = 1;
-	gbc.gridy = 3;
-	panelB.add(totalRevenue, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 4;
+		panelB.add(totalRevenue, gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		panelB.add(vacant, gbc);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		panelB.add(vacNum, gbc);
 		
 		scroll = new JScrollPane(list);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		panelR.add(scroll);
+		
 	
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		panelR.add(scroll,gbc);
+	
+		list.append(" "+"-NAME-" + "\t\t" + "-PRICE(BDT)-");
 	
 		
-	     reserve.addActionListener(new ActionListener(){
+	//Button Handling	
+	     res_Can.addActionListener(new ActionListener(){
 	            public void actionPerformed(ActionEvent e){
-	                num--;
-	                res++;
-	                numberLabel.setText("" +num);
-	                resLabel.setText("" + res);
-	                text=nameText.getText();
+	            	if(Res.isSelected()) {
+	            		
 	                number=priceText.getText();
-	                list.append("NAME: "+text+"\n");
-	                list.append("TICKET PRICE: "+number+"\n");
+	                Double dbl = new Double(number);
+	                if(InputUtility.getDouble(dbl))
+	                {
+	                num--;
+		            res++;
+		            vacNum.setText("" +num);
+		            resLabel.setText("" + res);
+		            text=nameText.getText();
+	                total = total + dbl.doubleValue();
+	                totalRevenue.setText("" + total);
+	                list.append("\n" + "  "+text+"\t\t"+number);
+	               
+	                }}else if(Canc.isSelected()) {
+	                	nameText.setText("");
+	            		priceText.setText("");
+	            		list.setText(null);
+	            		res=0;
+	            		num=0;
+
+	            		while(num<240) {
+	            			num++;
+	            			vacNum.setText(""+num);
+	            			resLabel.setText("0");
+	            			totalRevenue.setText("0");
+	            			total=0;
+	            		}
+	                }
 	            	}
 	        });
 		
@@ -184,13 +230,8 @@ private JFrame frame;
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // to make sure that the program closes when the frame closes
 		frame.setSize(700, 400);
-	}
-	
-	
-	}
-	
-	
-	
-	
+}
 	
 
+
+}
